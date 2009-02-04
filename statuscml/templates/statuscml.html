@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+{% load expr %}
+<coda version="0.1">
+    <div backgroundGradientColors="[#d0d0d0, #808080]" height="100">
+       <p><span size="large" color="black">Camvine Server Status</span></p>
+     </div>
+  <div background="black">
+      <div xpos="0" ypos="0" width="100%" height="100%" margin="0">
+          <img src="http://www.camvine.com/static/serverrackdark.jpg" width="100%" height="100%" />
+      </div>
+      {% expr min(6, len(checkstates)) as rows %}
+      {% expr int(height)-100-60-50-40 as workheight %}
+      {% expr int(workheight / rows) as lineheight %}
+      {% expr int(lineheight * 0.85) as boxsize %}
+      <div foreground="white" xpos="50" ypos="50">
+          {% for f in checkstates %}
+          {% expr forloop['counter0'] as i %}
+          {% expr (i % rows) * lineheight as y %}
+          {% expr (i / rows) * int(width) / 2 as x %}
+          {% expr int(lineheight * 0.3 * 1000) as bigfont %}
+          {% expr int(bigfont / 2) as smallfont %}
+          {% expr int(lineheight * (1-0.3-0.15) / 4) as linelower %}
+          <div xpos="0" ypos="0" height="{{lineheight}}">
+              <div margin="0" xpos="{{x}}" ypos="{{y}}" width="{{boxsize}}" height="{{boxsize}}" 
+              background="{% ifequal f.1 "CHECK_UP"%}green{% else %}red{% endifequal %}"  backgroundGradientColors="{% ifequal f.1 "CHECK_UP"%}[#30ff30, #308030]{% else %}[#ff3030, #803030]{% endifequal %}"
+              backgroundOpacity="0.9" cornerRadius="10" > </div>
+              <div margin="0" xpos="{{x|add:boxsize|add:20}}" ypos="{{y|add:linelower}}">
+                  <p><span size="{{bigfont}}">{{f.0}}</span><br />
+                      <span size="{{smallfont}}" color="#c0c090">checked at {{f.2}}</span>
+                  </p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+      </div>
+      <div ypos="-60"><p><span size="16000">Info from pingdom.com</span></p></div>
+      <div xpos="-220" ypos="-120" margin="0">
+          <img src="http://camvine.com/sites/default/themes/camvine/images/cvn-neg-trans-200.png" />
+      </div>
+  </coda>
+  
